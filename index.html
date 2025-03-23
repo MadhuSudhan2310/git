@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Validated Form</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f8ff; /* Light blue background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6495ed; /* Cornflower blue focus */
+        }
+
+        .error {
+            color: red;
+            font-size: 0.8em;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        .input-container{
+            position: relative;
+        }
+
+        .input-container input.invalid {
+            border-color: red;
+        }
+
+    </style>
+</head>
+<body>
+    <form id="myForm" method="post" action="https://script.google.com/macros/s/AKfycby_LA4JIe9K4K3ICvEkbPi0S76sIK4Q2avufLrsjbyYGXYWrvH9dExQulWYTMVA-k9kIw/exec">
+        <div class="input-container">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <div class="error" id="nameError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <div class="error" id="emailError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone">
+            <div class="error" id="phoneError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address">
+            <div class="error" id="addressError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city">
+            <div class="error" id="cityError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state">
+            <div class="error" id="stateError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="zip">Zip Code:</label>
+            <input type="text" id="zip" name="zip">
+            <div class="error" id="zipError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="country">Country:</label>
+            <select id="country" name="country">
+                <option value="">Select Country</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="UK">United Kingdom</option>
+               <option value="INDIA">INDIA</option>
+
+            </select>
+            <div class="error" id="countryError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="comments">Comments:</label>
+            <textarea id="comments" name="comments"></textarea>
+            <div class="error" id="commentsError"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date">
+            <div class="error" id="dateError"></div>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+
+           const scriptURL = 'https://script.google.com/macros/s/AKfycby_LA4JIe9K4K3ICvEkbPi0S76sIK4Q2avufLrsjbyYGXYWrvH9dExQulWYTMVA-k9kIw/exec'
+
+const form = document.forms['contact-form']
+
+form.addEventListener('submit', e => {
+  
+  e.preventDefault()
+  
+  fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+  .then(response => alert("Thank you! Form is submitted" ))
+  .then(() => { window.location.reload(); })
+  .catch(error => console.error('Error!', error.message))
+})
+        const form = document.getElementById('myForm');
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const zip = document.getElementById('zip');
+        const country = document.getElementById('country');
+
+        form.addEventListener('submit', function(event) {
+            let isValid = true;
+
+            isValid = validateName(name) && isValid;
+            isValid = validateEmail(email) && isValid;
+            isValid = validatePhone(phone) && isValid;
+            isValid = validateZip(zip) && isValid;
+            isValid = validateCountry(country) && isValid;
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if invalid
+            }
+        });
+
+        function validateName(input) {
+            if (!input.value.trim()) {
+                document.getElementById('nameError').textContent = 'Name is required.';
+                input.classList.add("invalid");
+                return false;
+            } else {
+                document.getElementById('nameError').textContent = '';
+                input.classList.remove("invalid");
+                return true;
+            }
+        }
+
+        function validateEmail(input) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(input.value)) {
+                document.getElementById('emailError').textContent = 'Invalid email format.';
+                input.classList.add("invalid");
+                return false;
+            } else {
+                document.getElementById('emailError').textContent = '';
+                input.classList.remove("invalid");
+                return true;
+            }
+        }
+
+        function validatePhone(input) {
+            const phoneRegex = /^[0-9\s-()+]*$/;
+            if (input.value && !phoneRegex.test(input.value)) {
+                document.getElementById('phoneError').textContent = 'Invalid phone number format.';
+                input.classList.add("invalid");
+                return false;
+            } else {
+                document.getElementById('phoneError').textContent = '';
+                input.classList.remove("invalid");
+                return true;
+            }
+        }
+
+        function validateZip(input) {
+            if (input.value && !/^\d{5}(-\d{4})?$/.test(input.value)) {
+                document.getElementById('zipError').textContent = 'Invalid zip code format.';
+                input.classList.add("invalid");
+                return false;
+            } else {
+                document.getElementById('zipError').textContent = '';
+                input.classList.remove("invalid");
+                return true;
+            }
+        }
+
+        function validateCountry(select) {
+            if (!select.value) {
+                document.getElementById('countryError').textContent = 'Please select a country.';
+                select.classList.add("invalid");
+                return false;
+            } else {
+                document.getElementById('countryError').textContent = '';
+                select.classList.remove("invalid");
+                return true;
+            }
+        }
+    </script>
+</body>
+</html>
